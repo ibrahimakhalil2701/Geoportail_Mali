@@ -1,0 +1,640 @@
+/* Corps global */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Header */
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2d3e50;
+  padding: 10px 20px;
+  color: white;
+}
+
+#header .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img.logo-image {
+  height: 40px;
+  width: auto;
+}
+
+#header h1 {
+  font-size: 24px;
+  margin: 0;
+  font-weight: bold;
+  background: linear-gradient(90deg, #14b53a, #fcd116, #e2233a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Style de base pour tous les boutons de la barre */
+.map-controls button {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  /* Même padding pour tous */
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: inline-flex;
+  /* Pour aligner l’icône et le texte */
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  /* Taille de la police (pour le texte "Modifier") */
+}
+
+/* Au survol */
+.map-controls button:hover {
+  background-color: #666;
+}
+
+/* Applique la même taille et la même couleur aux icônes */
+.map-controls button i,
+.map-controls button .material-symbols-outlined {
+  font-size: 18px;
+  /* Ajustez selon vos préférences */
+  color: inherit;
+  /* Hérite de la couleur du bouton (blanc ici) */
+  vertical-align: middle;
+}
+
+/* Le bouton "Modifier" */
+.edit-mode-button {
+  background-color: #1c6fce;
+  font-weight: bold;
+}
+
+.edit-mode-button:hover {
+  background-color: #2580ef;
+}
+
+
+/* La carte */
+#map {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 48px);
+  transition: left 0.3s ease, width 0.3s ease;
+}
+
+/* Sidebar */
+#sidebar {
+  position: absolute;
+  top: 48px;
+  left: -600px;
+  width: 600px;
+  height: calc(100% - 48px);
+  background: #e4ebf3;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.3);
+  transition: left 0.3s ease, opacity 0.3s ease;
+  z-index: 1001;
+  padding: 10px;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#toggleSidebar {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  background-color: rgba(16, 15, 15, 0.349);
+  color: #e0e0e0;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  transition: left 0.3s ease;
+}
+
+#toggleSidebar.open {
+  left: 620px;
+}
+
+#sidebar.open {
+  left: 0;
+  opacity: 1;
+}
+
+#map.sidebar-open {
+  left: 600px;
+  width: calc(100% - 600px);
+}
+
+/* Image top dans le sidebar */
+.sidebar-image {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.sidebar-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Boutons recensement/géographie/statistique */
+.buttons-container {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+.section-button {
+  flex: 1;
+  text-align: center;
+  background-color: #324a64;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  border-radius: 8px;
+  outline: none;
+  border-right: 1px solid #e4ebf3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-button .button-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.section-button:last-child {
+  border-right: none;
+}
+
+.section-button:hover {
+  background-color: #0056b3;
+}
+
+/* shared-panel */
+.shared-panel {
+  flex: 1;
+  background-color: #f1f1f1;
+  overflow-y: auto;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.shared-panel.active {
+  display: block;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Filtres / sous-boutons */
+.filter-button,
+.sub-filter-button {
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-button:hover,
+.sub-filter-button:hover {
+  background-color: #e0e0e0;
+}
+
+.sub-filter-options {
+  display: none;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+.sub-filter-options.active {
+  display: flex;
+}
+
+.icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+  margin-left: auto;
+}
+
+.icon.open {
+  transform: rotate(45deg);
+}
+
+.filter-button.active,
+.sub-filter-button.active {
+  background-color: #d0d0d0;
+}
+
+/* Contrôles de zoom custom */
+.map-controls-left {
+  position: absolute;
+  bottom: 30px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  padding: 1px;
+  background: rgba(16, 15, 15, 0.349);
+}
+
+.map-controls-left button {
+  background: rgba(255, 255, 255, 0.199);
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.map-controls-left button:hover {
+  background: #e0e0e0;
+}
+
+/* Iframe container */
+#iframeContainer {
+  position: absolute;
+  bottom: 135px;
+  left: 0px;
+  height: 40px;
+  z-index: 1000;
+  width: calc(100% - 0px);
+  transition: left 0.3s ease, width 0.3s ease;
+}
+
+#iframeContainer.open {
+  left: 625px;
+  width: calc(100% - 600px);
+}
+
+#iframeContainer iframe {
+  width: 50px;
+  height: 100%;
+  border: none;
+}
+
+/* Fenêtres chart/legend */
+.chart-window {
+  position: absolute;
+  width: 340px;
+  height: 250px;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  resize: both;
+  overflow: auto;
+}
+
+.chart-window-header {
+  background: #f1f1f1;
+  padding: 5px;
+  cursor: move;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart-window-header .close-button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.chart-window-content {
+  flex: 1;
+  padding: 5px;
+}
+
+.info.legend,
+.legend-window {
+  background: white;
+  padding: 10px;
+  line-height: 18px;
+  color: #555;
+  position: absolute;
+  z-index: 1000;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  cursor: move;
+}
+
+.info.legend i,
+.legend-window i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+/* map-layers-list */
+.map-layers-list {
+  position: absolute;
+  bottom: 30px;
+  right: 37px;
+  background: rgba(49, 43, 43, 0.192);
+  padding: 10px;
+  z-index: 1000;
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 20px;
+}
+
+.map-layers-list.open {
+  display: flex;
+}
+
+.layer-button {
+  margin-right: 10px;
+}
+
+.layer-button img {
+  width: 80px;
+  height: 75px;
+  border-radius: 8px;
+}
+
+/* Clusters */
+.marker-cluster-small {
+  background-color: rgba(181, 226, 140, 0.6);
+  color: white;
+}
+
+.marker-cluster-medium {
+  background-color: rgba(241, 211, 87, 0.6);
+  color: white;
+}
+
+.marker-cluster-large {
+  background-color: rgba(253, 156, 115, 0.6);
+  color: white;
+}
+
+.marker-cluster div {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  color: white;
+  text-align: center;
+  border: 2px solid white;
+}
+
+.marker-cluster span {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.leaflet-interactive {
+  pointer-events: none;
+}
+
+/* Petit panneau flottant pour l'édition */
+#editPanel {
+  position: absolute;
+  top: 120px;
+  /* ~3cm sous le header */
+  right: 30px;
+  width: 260px;
+  background: #fefefe;
+  border: 2px solid #324a64;
+  border-radius: 8px;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  /* Priorité forte pour être devant la carte */
+  padding: 0;
+  display: none;
+  /* caché par défaut */
+}
+
+.editPanelHeader {
+  background-color: #324a64;
+  color: #fff;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+}
+
+.editPanelHeader button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.editPanelBody {
+  padding: 10px;
+}
+
+.editPanelBody p {
+  margin: 0 0 10px;
+}
+
+.editPanelBody label {
+  display: block;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.editPanelBody input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#saveFeatureBtn {
+  background-color: #e67e22;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#saveFeatureBtn:hover {
+  background-color: #cf6710;
+}
+
+/* Barre d'outils Leaflet.PM horizontale */
+.pm-toolbar-horizontal {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  background: #f1f1f1;
+  padding: 6px 10px;
+  border: 2px solid #324a64;
+  border-radius: 8px;
+  gap: 8px;
+  /* On la place au-dessus du panel */
+  position: absolute !important;
+  left: 20px;
+  top: 10px;
+  /* ajustez si besoin */
+  z-index: 2000;
+}
+
+.pm-toolbar-horizontal .leaflet-pm-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #324a64;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pm-toolbar-horizontal .leaflet-pm-icon:hover {
+  background-color: #1c6fce;
+}
+
+/* Optionnel : masquer le tooltip original de Leaflet.PM si besoin */
+.leaflet-pm-icon .leaflet-pm-tooltip {
+  display: none;
+}
+
+/* Petite animation sur .shared-panel */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+
+
+
+/* Panneau d'édition */
+#editPanel {
+  position: absolute;
+  top: 100px;
+  right: 30px;
+  width: 260px;
+  background: white;
+  border: 2px solid #324a64;
+  border-radius: 8px;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  padding: 0;
+  display: none;
+  /* masqué tant que mode édition inactif */
+}
+
+.editPanelHeader {
+  background-color: #324a64;
+  color: #fff;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+  /* pour le "drag" éventuel */
+}
+
+.editPanelBody {
+  padding: 20px;
+}
+
+/* Champ "pmToolbarContainer" : 
+   on s'attend à ce que Leaflet.PM y place la .leaflet-pm-toolbar */
+#pmToolbarContainer {
+  padding: 20px;
+  border-top: 1px solid #ccc;
+}
+
+/* On force la barre d’outils de Leaflet.PM à être statique */
+#pmToolbarContainer .leaflet-pm-toolbar {
+  position: relative;
+  bottom: 108px;
+  right: 21px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: space-around;
+  gap: 18px;
+  background: #324a64;
+  border: 3px solid #324a64;
+  border-radius: 6px;
+  padding: 6px;
+
+}
+
+/* icônes Leaflet.PM */
+#pmToolbarContainer .leaflet-pm-icon {
+  width: 100px;
+  height: 100px;
+  background-color: #324a64;
+  color: #fff;
+  border-radius: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#pmToolbarContainer .leaflet-pm-icon:hover {
+  background-color: #1c6fce;
+
+}
