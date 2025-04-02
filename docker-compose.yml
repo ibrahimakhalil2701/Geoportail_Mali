@@ -1,0 +1,31 @@
+version: "3.4"
+
+services:
+  pg_tileserv:
+    image: pramsey/pg_tileserv:latest
+    ports:
+      - "7800:7800"
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+    volumes:
+      - ./pg_tileserv.toml:/etc/pg_tileserv.toml
+    restart: always
+
+  pg_featureserv:
+    image: pramsey/pg_featureserv:latest
+    ports:
+      - "9000:9000"
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+    restart: always
+
+  server-web:
+    image: nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./Geoportail.html:/usr/share/nginx/html/Geoportail.html
+      - ./style.css:/usr/share/nginx/html/style.css
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./vignette_photo:/usr/share/nginx/html/vignette_photo
+    restart: always
