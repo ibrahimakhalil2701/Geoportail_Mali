@@ -23,6 +23,21 @@ const initialView = {
 };
 
 
+map.pm.setLang('fr', {
+  tooltips: {
+    // Ici, vous pouvez personnaliser tous les textes d’info-bulle
+    placeMarker: "Cliquez pour placer un point",
+    firstVertex: "Placez le premier point",
+    // etc.
+  },
+  actions: {
+    finish: "Terminer",  // pour le bouton “Finish”
+    cancel: "Annuler",   // pour le bouton “Cancel”
+    // etc.
+  }
+}, 'fr');
+
+
 
 
 // Boutons "reset view" et "locate me"
