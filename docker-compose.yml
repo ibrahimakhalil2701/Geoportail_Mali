@@ -24,8 +24,9 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./Geoportail.html:/usr/share/nginx/html/Geoportail.html
-      - ./style.css:/usr/share/nginx/html/style.css
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./vignette_photo:/usr/share/nginx/html/vignette_photo
+      - ./apps/index.html:/usr/share/nginx/html/index.html
+      - ./apps/style.css:/usr/share/nginx/html/style.css
+      - ./apps/vignette_photo:/usr/share/nginx/html/vignette_photo
+      - ./apps/script.js:/usr/share/nginx/html/script.js
+      - ./apps/server.js:/usr/share/nginx/html/server.js
     restart: always
