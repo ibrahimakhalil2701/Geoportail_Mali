@@ -638,3 +638,40 @@ body {
   background-color: #1c6fce;
 
 }
+.logout-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px; /* ou 20px si tu veux plus d'espace */
+  cursor: pointer;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
+}
+
+
+#select-entity-btn {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  border: none;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#select-entity-btn:hover {
+  background-color: #e0e0e0;
+}

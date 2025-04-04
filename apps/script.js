@@ -335,43 +335,43 @@ const layersConfig = [
     type: 'vectortile'
   },
   {
-    url: 'http://localhost:9000/collections/public.pays/items?limit=999999',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.pays/items?limit=999999',
     name: 'Couche_Pop_Pays',
     type: 'polygon',
     nameProperty: 'Nom_Pays'
   },
   {
-    url: 'http://localhost:9000/collections/public.region/items?limit=999999',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.region/items?limit=999999',
     name: 'Couche_Pop_Region',
     type: 'polygon',
     nameProperty: 'Nom_Region'
   },
   {
-    url: 'http://localhost:9000/collections/public.departement/items?limit=999999',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.departement/items?limit=999999',
     name: 'Couche_pop_departement',
     type: 'polygon',
     nameProperty: 'Nom_Departement'
   },
   {
-    url: 'http://localhost:9000/collections/public.commune%20/items.json?limit=5000',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.commune%20/items?limit=999999',
     name: 'Couche_Pop_Commune',
     type: "polygon",
     nameProperty: "Nom_Commune"
   },
   {
-    url: 'http://localhost:9000/collections/public.finance/items?limit=999999',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.finance/items?limit=999999',
     name: 'finance',
     type: 'point',
     cluster: true
   },
   {
-    url: 'http://localhost:9000/collections/public.place_publique/items?limit=999999',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.place_publique/items?limit=999999',
     name: 'place_publique',
     type: 'point',
     cluster: true
   },
   {
-    url: 'http://localhost:9000/collections/public.sante/items?limit=999999',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.sante/items?limit=999999',
     name: 'sante',
     type: 'point',
     cluster: true
@@ -382,18 +382,19 @@ const layersConfig = [
     type: 'vectortile',
   },
   {
-    url: 'http://localhost:7800/public.rail/{z}/{x}/{y}.pbf',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-7800.app.github.dev/public.rail/{z}/{x}/{y}.pbf',
     name: 'rail',
-    type: 'vectortile',
-  },
+    type: 'vectortile'
+  }
+  ,
   {
-    url: 'http://localhost:9000/collections/public.education/items?limit=999999',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.education/items?limit=999999',
     name: 'education',
     type: 'point',
     cluster: true
   },
   {
-    url: 'http://localhost:9000/collections/public.point_interet/items?limit=999999',
+    url: 'https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.point_interet/items?limit=999999',
     name: 'point_interet',
     type: 'point',
     cluster: true
@@ -529,7 +530,7 @@ async function editVectorTile(featureId, tableName) {
   try {
     // EXEMPLE d'URL pour récupérer le GeoJSON unique :
     // http://localhost:9000/collections/public.<tableName>/items/<featureId>?f=json
-    const url = `http://localhost:9000/collections/public.${tableName}/items/${featureId}?f=json`;
+    const url = `https://organic-trout-g4rr47j5p4xph54j-9000.app.github.dev/collections/public.${tableName}/items/${featureId}?f=json`;
     const resp = await fetch(url);
     if (!resp.ok) throw new Error("Erreur GET entité VectorTile");
     const singleGeoJSON = await resp.json();
@@ -568,7 +569,7 @@ async function saveCurrentVectorEdit() {
   const tName = window.currentTableName;
 
   try {
-    const resp = await fetch(`http://localhost:3000/api/${tName}/${fid}`, {
+    const resp = await fetch(`https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/api/${tName}/${fid}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedGeoJSON)
@@ -592,8 +593,9 @@ async function saveCurrentVectorEdit() {
 async function deleteVectorTile(featureId, tableName) {
   if (!confirm("Supprimer cette entité ?")) return;
   try {
-    const resp = await fetch(`http://localhost:3000/api/${tableName}/${featureId}`, {
-      method: 'DELETE'
+    const resp = await fetch(`https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/api/${tableName}/${featureId}`, {
+      method: 'DELETE',
+      credentials: 'include' // 🔥 cette ligne est essentielle
     });
     if (!resp.ok) throw new Error("Echec suppression");
     alert("Entité supprimée !");
@@ -829,12 +831,10 @@ async function deleteEntity(featureId) {
     return;
   }
 
-  // 2) Demander confirmation (optionnel)
   if (!confirm("Voulez-vous vraiment supprimer cette entité ?")) {
     return;
   }
 
-  // 3) Déterminer le nom de la table
   const tableName = foundLayer.feature.properties.layerName;
   if (!tableName) {
     alert("La propriété 'layerName' est manquante sur l'entité.");
@@ -842,19 +842,18 @@ async function deleteEntity(featureId) {
   }
 
   try {
-    // 4) Appeler l’API en DELETE
-    const resp = await fetch(`http://localhost:3000/api/${tableName}/${featureId}`, {
-      method: 'DELETE'
+    // 🔥🔥🔥 La ligne suivante est ESSENTIELLE :
+    const resp = await fetch(`https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/api/${tableName}/${featureId}`, {
+      method: 'DELETE',
+      credentials: 'include' // ✅ Ajoute cette ligne pour envoyer les cookies !
     });
+
     if (!resp.ok) {
       throw new Error("Erreur lors de la suppression dans la base");
     }
+
     console.log("Suppression OK pour ID =", featureId);
-
-    // 5) Supprimer la feature de la carte
-    // (Si vous souhaitez recharger la couche depuis l’API, vous pouvez plutôt faire un "reload")
     foundLayer.remove();
-
     alert("Entité supprimée avec succès.");
 
   } catch (err) {
@@ -862,6 +861,7 @@ async function deleteEntity(featureId) {
     alert("Erreur de suppression : " + err.message);
   }
 }
+
 
 
 // Cluster
@@ -1348,20 +1348,87 @@ const editableLayersConfig = [
 ];
 
 
-// Bouton "Modifier"
 const toggleEditBtn = document.getElementById('toggleEditMode');
-toggleEditBtn.addEventListener('click', () => {
-  editMode = !editMode;
-  if (editMode) {
-    enableEditingUI();
+
+toggleEditBtn.addEventListener('click', async function () {
+  try {
+    // 🔁 Vérifie l’authentification côté serveur (important après un refresh)
+    const response = await fetch('https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/check-auth', {
+      credentials: 'include'
+    });
+    const data = await response.json();
+
+    if (data.authenticated) {
+      window.isAuthenticated = true;
+      editMode = !editMode;
+
+      if (editMode) {
+        toggleEditBtn.style.backgroundColor = '#e67e22';
+        editPanel.style.display = 'block';
+        enableEditingUI();
+      } else {
+        toggleEditBtn.style.backgroundColor = '#1c6fce';
+        editPanel.style.display = 'none';
+        disableEditingUI();
+      }
+
+      document.getElementById('logoutBtn').style.display = 'inline-flex';
+    } else {
+      // ❌ Pas connecté → ouvrir la pop-up de login
+      const loginWindow = window.open(
+        'https://organic-trout-g4rr47j5p4xph54j-3001.app.github.dev/?from=edit',
+        '_blank',
+        'width=500,height=600'
+      );
+      if (!loginWindow) {
+        alert("La fenêtre de connexion a été bloquée. Autorise les pop-ups.");
+      }
+    }
+  } catch (err) {
+    console.error("Erreur lors de la vérification d’authentification :", err);
+    alert("Erreur réseau lors de la vérification de session.");
+  }
+});
+
+
+window.addEventListener('message', (event) => {
+  if (event.origin !== 'https://organic-trout-g4rr47j5p4xph54j-3001.app.github.dev') return;
+
+  if (event.data === 'auth-success-edit') {
+    console.log("✅ Authentification réussie → activation du mode édition");
+
+    window.isAuthenticated = true;
+    editMode = true;
+
     toggleEditBtn.style.backgroundColor = '#e67e22';
     editPanel.style.display = 'block';
-  } else {
-    disableEditingUI();
-    toggleEditBtn.style.backgroundColor = '#444';
-    editPanel.style.display = 'none';
-  }
+    enableEditingUI();
 
+    document.getElementById('logoutBtn').style.display = 'inline-flex';
+  }
+});
+
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  try {
+    await fetch('https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
+
+    // 👉 Cache le bouton après déconnexion
+    document.getElementById('logoutBtn').style.display = 'none';
+
+    // 👉 Réinitialise le mode édition
+    editMode = false;
+    disableEditingUI();
+    editPanel.style.display = 'none';
+    toggleEditBtn.style.backgroundColor = '#1c6fce';
+
+    alert("Vous avez été déconnecté !");
+  } catch (err) {
+    alert("Erreur lors de la déconnexion.");
+  }
 });
 
 
@@ -1440,19 +1507,21 @@ saveFeatureBtn.addEventListener('click', async () => {
     let resp;
     if (existingId) {
       // === Objet EXISTANT : on fait un PUT
-      resp = await fetch(`http://localhost:3000/api/${chosenName}/${existingId}`, {
+      resp = await fetch(`https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/api/${chosenName}/${existingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedGeojson)
+        body: JSON.stringify(updatedGeojson),
+        credentials: 'include'  // 🔥 nécessaire
       });
       if (!resp.ok) throw new Error("Erreur update");
       alert("Objet mis à jour !");
     } else {
       // === Nouvel objet : on fait un POST
-      resp = await fetch(`http://localhost:3000/api/${chosenName}`, {
+      resp = await fetch(`https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/api/${chosenName}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedGeojson)
+        body: JSON.stringify(updatedGeojson),
+        credentials: 'include'  // 🔥 nécessaire
       });
       if (!resp.ok) throw new Error("Erreur insert");
       const result = await resp.json();
@@ -1543,6 +1612,10 @@ function enableEditingUI() {
   applyLayerChoice(editableLayersConfig[0].name);
 }
 
+
+
+
+
 function disableEditingUI() {
   map.pm.removeControls();
   map.off('pm:create', onShapeCreated);
@@ -1610,7 +1683,7 @@ async function onShapeEdited(e) {
 
     try {
       // CHANGEMENT ICI : on appelle /api/<tableName>/<id>
-      const resp = await fetch(`http://localhost:3000/api/${tableName}/${id}`, {
+      const resp = await fetch(`https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/api/${tableName}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedGeojson)
@@ -1637,7 +1710,7 @@ function onShapeRemoved(e) {
   // CHANGEMENT ICI : on récupère le nom de table
   const tableName = layer.feature?.properties?.layerName || 'finance';
 
-  fetch(`http://localhost:3000/api/${tableName}/${id}`, {
+  fetch(`https://organic-trout-g4rr47j5p4xph54j-3000.app.github.dev/api/${tableName}/${id}`, {
     method: 'DELETE'
   })
     .then(resp => {

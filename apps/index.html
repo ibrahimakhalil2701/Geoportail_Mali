@@ -14,7 +14,7 @@
   <link href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" rel="stylesheet">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=location_on" />
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
   <!-- Votre feuille de style personnalisée -->
   <link rel="stylesheet" href="style.css">
@@ -34,10 +34,20 @@
       <img src="vignette_photo/instat.jpg" alt="Logo" class="logo-image">
       <h1>Geoportail du Mali</h1>
     </div>
+  
 
     <!-- Boutons principaux -->
+
+
+
+    
     <div class="map-controls">
       <button title="Imprimer la Carte" onclick="window.print();"><i class="fas fa-print"></i></button>
+
+
+      <button id="logoutBtn" class="logout-button" style="display: none;">
+        <i class="fas fa-sign-out-alt"></i> Déconnexion
+      </button>
 
 
       <!-- Bouton Recentrer -->
