@@ -1544,7 +1544,6 @@ saveFeatureBtn.addEventListener('click', async () => {
 
 
 function enableEditingUI() {
-  // Activer les contrôles PM
   map.pm.addControls({
     position: 'topright',
     drawMarker: true,
@@ -1563,39 +1562,21 @@ function enableEditingUI() {
       headerToolbarContainer.appendChild(pmToolbar);
     }
 
-    // Vérifier l'existence du bouton avant de le créer
-    let selectionButton = document.getElementById('select-entity-btn');
-    if (!selectionButton) {
-      selectionButton = document.createElement('button');
-      selectionButton.id = 'select-entity-btn';
-      selectionButton.title = "Sélectionner une entité";
-      selectionButton.innerHTML = '🏷️';
-      selectionButton.style.marginLeft = '10px';
-
-      // Toggle mode sélection
-      selectionButton.addEventListener('click', function () {
+    const selectionButton = document.getElementById('select-entity-btn');
+    if (selectionButton) {
+      selectionButton.style.display = 'inline-block';
+      selectionButton.onclick = () => {
         window.selectionModeActive = !window.selectionModeActive;
         if (window.selectionModeActive) {
           alert("Mode sélection activé. Cliquez sur une entité pour afficher les options.");
         } else {
-          alert("Mode sélection désactivé. Popups normales rétablies.");
+          alert("Mode sélection désactivé.");
         }
-      });
-
-      headerToolbarContainer.appendChild(selectionButton);
+      };
     }
   }, 0);
 
-  // Initialisation de la variable globale pour le mode sélection
   window.selectionModeActive = false;
-
-  function activateSelectionMode() {
-    window.selectionModeActive = true;
-    alert("Mode sélection activé. Cliquez sur une entité pour afficher les options.");
-  }
-
-
-
 
   map.on('pm:create', onShapeCreated);
   map.on('pm:edit', onShapeEdited);
@@ -1625,13 +1606,11 @@ function disableEditingUI() {
   map.pm.disableDraw('Line');
   map.pm.disableDraw('Polygon');
 
-  // Réinitialiser la sélection
   window.selectionModeActive = false;
 
-  // Retirer le bouton s’il existe
   const selectionBtn = document.getElementById('select-entity-btn');
   if (selectionBtn) {
-    selectionBtn.remove();
+    selectionBtn.style.display = 'none';
   }
 
   layerChoice.innerHTML = '';
